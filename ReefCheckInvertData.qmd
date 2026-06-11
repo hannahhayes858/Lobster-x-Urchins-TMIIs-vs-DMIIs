@@ -1,0 +1,66 @@
+---
+title: "Reef Check Invert Data"
+author: "Hannah Hayes"
+format: html
+editor: visual
+---
+
+## The Objective
+
+The objective of this quarto document is to use the ReefCheck data from Monterey to understand the density of urchins m^2^. So we can use this data to inform the density of urchins we should use in the actual experiment.
+
+##Load Packages
+
+```{r}
+#any packages that haven't been installed install
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+
+```
+
+##Read in Data
+
+```{r}
+rc <- read.csv("Invert_California_raw_2024_ReefCheck.csv") #read in data and store as rc
+head(rc)
+```
+
+##Tidy Data 
+We want to select for the information we are interested in. We want to narrow it down to only urchins, past Point Concepcion and before Mendocino, and data from 2024.
+
+```{r}
+rcurch <- rc %>% #storing this as a new data frame and opening up the pipeline
+  mutate(Date = mdy(Date)) %>%  #changing the date format from MM/DD/YY
+  filter(Year == 2024) %>%  #filtering columns for data from year 2024
+  filter(Classcode %in% c("Purple Urchin", "Red Urchin")) %>%  #filter for only red and purple urchins
+  filter(between(Latitude,34.45,36.6)) #filter for sites past point concepcion and ending in Monterey
+
+head(rcurch) #check to see if the formatting is correct
+```
+
+##Visualize Red vs Purple Urchins
+
+Awesome! Now we have a data set that has only purple and red urchins. Now let's visualize the data to help us understand how abundant red urchins are in this area.
+### Scatterplot
+```{r}
+rvp <- rcurch %>% #opening data frame and storing plot as rvp 
+  ggplot(aes(x = Latitude , y = Amount , color = Classcode)) + #defining our variables
+  geom_point() #This adds the data into the plot 
+rvp #printing the plot 
+```
+
+This plot looks okay, but let's try making this into a histogram and a bar plot 
+
+###Barplot
+```{r}
+rvpbar <- rcurch %>% 
+  ggplot(aes(x = Site, y = Amount, fill = Classcode)) +
+           geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+rvpbar
+```
+
+
+
