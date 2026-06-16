@@ -54,6 +54,13 @@ rvp #printing the plot
 
 This plot looks okay, but let's try making this into a histogram and a bar plot 
 
+### Site Names
+Let's take a look how many different sites in the central California/Monterey Bay area. 
+
+```{r}
+unique(rcurch$Site)
+```
+
 ### Barplot
 ```{r}
 rvpbar <- rcurch %>% 
@@ -62,6 +69,89 @@ rvpbar <- rcurch %>%
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
 rvpbar
 ```
+
+### Boxplots
+Let's make a box plot that we would show the spread at each site.
+
+
+```{r}
+rvpbox <- rcurch %>% 
+  ggplot(aes(x = Site, y = Amount)) +
+           geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+rvpbox
+```
+
+## Purple Urchins
+Only looking at pruple urchins not inclusing red urchins
+
+### Only purple urchins dataset
+
+```{r}
+purch <- rc %>% #storing this as a new data frame and opening up the pipeline
+  mutate(Date = mdy(Date)) %>%  #changing the date format from MM/DD/YY
+  filter(Year == 2024) %>%  #filtering columns for data from year 2024
+  filter(Classcode == "Purple Urchin") %>%  #filter for only red and purple urchins
+  filter(between(Latitude,34.45,36.6)) #filter for sites past point concepcion and ending in Monterey
+
+head(purch) #check to see if the formatting is correct
+```
+
+### Box plot with the amount and site names
+
+```{r}
+pbox <- purch %>% 
+  ggplot(aes(x = Site, y = Amount)) +
+           geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+pbox
+```
+
+#Average per m^2^
+```{r}
+dense <- purch %>% 
+  mutate(Density = Amount/(Distance*2))
+dense
+```
+
+## Boxplot
+
+```{r}
+pbox <- dense %>% 
+  ggplot(aes(x = Site, y = Density)) +
+           geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+pbox
+```
+
+
+## Averages
+
+```{r}
+#Total Average
+mean(dense$Density)
+sd(dense$Density, na.rm = TRUE)
+head(dense)
+#Averdense#Average per site
+# Calculate the average by group (e.g., average height by species)
+avg <- dense %>% 
+  group_by(Site) %>% #groups it by site
+  summarise(across(where(is.numeric), list(mean = mean, sd = sd), na.rm = TRUE)) %>% 
+  ungroup()
+
+avg #prints the new data frame 
+```
+
+### Grouped averages and box plots 
+
+```{r}
+avgbox <- avg %>%   
+  ggplot(aes(x = Site, y = Density_mean)) +
+           geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+avgbox
+```
+
 
 
 
