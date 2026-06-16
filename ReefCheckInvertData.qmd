@@ -159,16 +159,18 @@ avgbox <- avg %>%
 avgbox
 ```
 
-# PISCO Kelp Data 
+# PISCO Kelp Data
 
-## Read in the data 
+## Read in the data
+
 ```{r}
 pisco <- read.csv("MLPA_swath_site_means.csv")
 head(pisco)
 ```
 
 ## Tidy data
-Filter data for 2024 data. This is the most recent data availble 
+
+Filter data for 2024 data. This is the most recent data availble
 
 ```{r}
 piscofilt <- pisco %>% 
@@ -177,8 +179,6 @@ piscofilt <- pisco %>%
 head(piscofilt)
 ```
 
+# Final Answer
 
-
-
-
-
+Since we are planning on comparing across barrens and kelp forests it's best to average between al of the sites. On average there were 7.65 urchins per meter squared. The 300 gallon tanks have a surface area ~2m^2^, so it' would be a good aim for about 16 urchins per experimental tank. 
