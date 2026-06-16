@@ -25,9 +25,12 @@ library(dplyr)
 ```{r}
 rc <- read.csv("Invert_California_raw_2024_ReefCheck.csv") #read in data and store as rc
 head(rc)
+
+
 ```
 
-## Tidy Data 
+## Tidy Data
+
 We want to select for the information we are interested in. We want to narrow it down to only urchins, past Point Concepcion and before Mendocino, and data from 2024.
 
 ```{r}
@@ -45,6 +48,7 @@ head(rcurch) #check to see if the formatting is correct
 Awesome! Now we have a data set that has only purple and red urchins. Now let's visualize the data to help us understand how abundant red urchins are in this area.
 
 ### Scatterplot
+
 ```{r}
 rvp <- rcurch %>% #opening data frame and storing plot as rvp 
   ggplot(aes(x = Latitude , y = Amount , color = Classcode)) + #defining our variables
@@ -52,16 +56,18 @@ rvp <- rcurch %>% #opening data frame and storing plot as rvp
 rvp #printing the plot 
 ```
 
-This plot looks okay, but let's try making this into a histogram and a bar plot 
+This plot looks okay, but let's try making this into a histogram and a bar plot
 
 ### Site Names
-Let's take a look how many different sites in the central California/Monterey Bay area. 
+
+Let's take a look how many different sites in the central California/Monterey Bay area.
 
 ```{r}
 unique(rcurch$Site)
 ```
 
 ### Barplot
+
 ```{r}
 rvpbar <- rcurch %>% 
   ggplot(aes(x = Site, y = Amount, fill = Classcode)) +
@@ -71,8 +77,8 @@ rvpbar
 ```
 
 ### Boxplots
-Let's make a box plot that we would show the spread at each site.
 
+Let's make a box plot that we would show the spread at each site.
 
 ```{r}
 rvpbox <- rcurch %>% 
@@ -83,6 +89,7 @@ rvpbox
 ```
 
 ## Purple Urchins
+
 Only looking at pruple urchins not inclusing red urchins
 
 ### Only purple urchins dataset
@@ -108,6 +115,7 @@ pbox
 ```
 
 #Average per m^2^
+
 ```{r}
 dense <- purch %>% 
   mutate(Density = Amount/(Distance*2))
@@ -123,7 +131,6 @@ pbox <- dense %>%
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
 pbox
 ```
-
 
 ## Averages
 
@@ -142,7 +149,7 @@ avg <- dense %>%
 avg #prints the new data frame 
 ```
 
-### Grouped averages and box plots 
+### Grouped averages and box plots
 
 ```{r}
 avgbox <- avg %>%   
@@ -151,6 +158,26 @@ avgbox <- avg %>%
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
 avgbox
 ```
+
+# PISCO Kelp Data 
+
+## Read in the data 
+```{r}
+pisco <- read.csv("MLPA_swath_site_means.csv")
+head(pisco)
+```
+
+## Tidy data
+Filter data for 2024 data. This is the most recent data availble 
+
+```{r}
+piscofilt <- pisco %>% 
+  filter(survey_year == 2024) %>% 
+  filter(between(latitude,36.36847,40)) 
+head(piscofilt)
+```
+
+
 
 
 
