@@ -182,3 +182,61 @@ head(piscofilt)
 # Final Answer
 
 Since we are planning on comparing across barrens and kelp forests it's best to average between al of the sites. On average there were 7.65 urchins per meter squared. The 300 gallon tanks have a surface area ~2m^2^, so it' would be a good aim for about 16 urchins per experimental tank. 
+
+# Pilot Experiment 
+
+```{r}
+setwd("/Users/hannahhayes858/Desktop/RCodes/TMIIvsDMII/Lobster-x-Urchins-TMIIs-vs-DMIIs/Data") #set working directory
+pilot <- read.csv("urchin_counts_pilot.csv") #read in data
+head(pilot)
+```
+
+## Filtering out treatment without Lobsters
+
+```{r}
+pilot_filt <- pilot %>% 
+   filter(Treatment != "No LOB")
+```
+
+## Plots 
+
+This is a plot to see the consumption per tank 
+```{r}
+dailyurch <- pilot_filt %>% 
+  ggplot(aes(x = Day_numrecord , y = Urchin_consumed , color = Tank)) + 
+  geom_point() #This adds the data into the plot 
+
+dailyurch
+```
+
+This is a plot to see the average consumption daily. 
+```{r}
+avgpilot <- pilot_filt %>% 
+  mutate(Average = mean(Urchin_consumed))
+head(avgpilot)
+
+avgdailyurch <- avgpilot %>% 
+  ggplot(aes(x = Day_numrecord , y = Urchin_consumed)) + 
+  geom_point() #This adds the data into the plot 
+
+avgdailyurch
+
+
+```
+
+I need Claude lol
+
+```{r}
+avgpilot <- pilot_filt %>% 
+  group_by(Day_numrecord) %>% 
+  summarise(Average = mean(Urchin_consumed, na.rm = TRUE))
+
+head(avgpilot)
+
+# plot it 
+boom <- avgpilot %>% 
+  ggplot(aes(x = Day_numrecord , y = Average)) + 
+  geom_point() #This adds the data into the plot 
+boom
+```
+
